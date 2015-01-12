@@ -1,12 +1,11 @@
 package esipe.mobi.daos;
 import java.util.List;
 
-
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 
+import esipe.mobi.Util.HibernateUtil;
 import esipe.mobi.beans.Book;
-import esipe.mobi.persistence.HibernateUtil;
 
 public class BookDao {
 	

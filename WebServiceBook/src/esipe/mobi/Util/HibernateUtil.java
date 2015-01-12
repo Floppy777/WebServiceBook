@@ -1,4 +1,4 @@
-package esipe.mobi.persistence;
+package esipe.mobi.Util;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.AnnotationConfiguration;

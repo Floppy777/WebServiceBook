@@ -19,6 +19,8 @@ import esipe.mobi.daos.BookDao;
 
 @Path("/book")
 public class BookController {
+	
+	public BookController(){}
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
