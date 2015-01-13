@@ -18,6 +18,9 @@ import javax.ws.rs.core.Response.Status;
 
 import esipe.mobi.beans.Book;
 import esipe.mobi.daos.BookDao;
+import esipe.mobi.exceptions.RestException;
+import esipe.mobi.exceptions.RestNotFoundException;
+import esipe.mobi.exceptions.RestNotModifiedException;
 
 @Path("/book")
 public class BookController {
@@ -35,10 +38,10 @@ public class BookController {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getBooks() {
-		List<Book> listBook ;
-		try{
-			listBook = BookDao.getAllBooks();	
-		}catch(IllegalStateException e){
+		List<Book> listBook = null;
+		try {
+			listBook = BookDao.getAllBooks();
+		} catch (RestException e) {
 			return Response.status(Status.NOT_FOUND).build();
 		}
 		System.out.println("GetAllBook from Mysql Database : "+ listBook.size());		
@@ -52,7 +55,7 @@ public class BookController {
 		Book book;
 		try {
 			book = BookDao.getBookByIsbn(isbn);
-		} catch(IllegalStateException e){
+		} catch(RestException e){
 			return Response.status(Status.NOT_FOUND).build();
 		}		
 		System.out.println("Get book from Mysql Database with isbn = " + isbn);		
@@ -66,7 +69,7 @@ public class BookController {
 		List<Book> books;
 		try {
 			books = BookDao.getBookByAuthor(author);
-		}catch(IllegalStateException e){
+		}catch(RestException e){
 			return Response.status(Status.NOT_FOUND).build();
 		}		
 		System.out.println("Get books from Mysql Database with author = "+author);
@@ -78,7 +81,7 @@ public class BookController {
 	public Response postBookByElements(Book b) {
 		try {
 			BookDao.save(b);
-		} catch(IllegalStateException e){
+		} catch(RestException e){
 			return Response.status(Status.NO_CONTENT).build();
 		}
 		System.out.println("Book save in Mysql Database");
@@ -91,8 +94,10 @@ public class BookController {
 	public Response updateBookByIsbn(Book b, @PathParam("isbn") int isbn){
 		try {
 			BookDao.update(b, isbn);
-		} catch (IllegalStateException e ){
+		} catch (RestNotFoundException e ){
 			return Response.status(Status.NOT_FOUND).build();
+		} catch(RestNotModifiedException e){
+			return Response.status(Status.NOT_MODIFIED).build();
 		}
 		System.out.println("Book with isbn = " + isbn + " update in Mysql Database");
 		return Response.status(Status.OK).build();
@@ -104,7 +109,7 @@ public class BookController {
 		try {
 			BookDao.delete(isbn);
 		}
-		catch(IllegalStateException e){
+		catch(RestException e){
 			return Response.status(Status.NOT_FOUND).build();
 		}
 		System.out.println("Book with isbn = " + isbn + " was delete in Mysql Database");
