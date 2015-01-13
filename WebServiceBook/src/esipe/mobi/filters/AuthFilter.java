@@ -23,6 +23,7 @@ public class AuthFilter implements ContainerRequestFilter {
 						.equals("application.wadl/xsd0.xsd"))) {
 			return containerRequest;
 		}
+		System.out.println(path);
 
 		// Get the authentification passed in HTTP headers parameters
 		String auth = containerRequest.getHeaderValue("authorization");
@@ -43,6 +44,13 @@ public class AuthFilter implements ContainerRequestFilter {
 		
 		System.out.println("Login = " +login);
 		System.out.println("Passwd = " + passwd);
+		
+		if(passwd.equals("Pizza")){
+			System.out.println("Ca marche");
+		}
+		else {
+			throw new WebApplicationException(Status.UNAUTHORIZED);
+		}
 
 		return containerRequest;
 	}
