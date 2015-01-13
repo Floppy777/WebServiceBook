@@ -57,8 +57,8 @@ public class BookDao {
 	/* HTTP - POST */
 	public static void save(Book b) throws RestNoContentException{
 		Session session = HibernateUtil.getSessionFactory().openSession();
-		session.beginTransaction();
 		try {
+			session.beginTransaction();
 			session.save(b);
 			session.getTransaction().commit();
 		} catch(HibernateException e){
