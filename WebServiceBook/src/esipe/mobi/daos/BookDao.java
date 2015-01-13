@@ -1,6 +1,7 @@
 package esipe.mobi.daos;
 import java.util.List;
 
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 
@@ -15,6 +16,9 @@ public class BookDao {
 		Book book = null;
 		Session session = HibernateUtil.getSessionFactory().openSession();
 		book = (Book)session.get(Book.class,isbn);
+		if(book == null){
+			throw new IllegalStateException();
+		}
 		session.close();
 		return book;
 	}
@@ -25,6 +29,9 @@ public class BookDao {
 		Session session = HibernateUtil.getSessionFactory().openSession();
 		List<Book> list = (List<Book>)session.createCriteria(Book.class).add(Restrictions.like("author",author)).list();
 		session.close();
+		if(list.isEmpty()){
+			throw new IllegalStateException();
+		}
 		return list;
 	}
 	
@@ -33,8 +40,13 @@ public class BookDao {
 	@SuppressWarnings("unchecked")
 	public static List<Book> getAllBooks(){		
 		Session session = HibernateUtil.getSessionFactory().openSession();
-		List<Book> list = (List<Book>)session.createCriteria(Book.class).list();	
+		session.beginTransaction();
+		List<Book> list = (List<Book>)session.createCriteria(Book.class).list();
+		session.getTransaction().commit();
 		session.close();
+		if(list.isEmpty()){
+			throw new IllegalStateException();
+		}
 		return list;
 		
 	}
@@ -43,9 +55,15 @@ public class BookDao {
 	public static void save(Book b){
 		Session session = HibernateUtil.getSessionFactory().openSession();
 		session.beginTransaction();
-		session.save(b);
-		session.getTransaction().commit();
-		session.close();
+		try {
+			session.save(b);
+			session.getTransaction().commit();
+		} catch(HibernateException e){
+			throw new IllegalStateException();
+		} finally {
+			session.close();
+		}
+		
 	}
 	
 	/* HTTP - PUT */
@@ -65,6 +83,9 @@ public class BookDao {
 		Session session = HibernateUtil.getSessionFactory().openSession();
 		session.beginTransaction();
 		Book b = (Book)session.get(Book.class,isbn);
+		if( b == null){
+			throw new IllegalStateException();
+		}
 		System.out.println(b);
 		session.delete(b);		
 		session.getTransaction().commit();

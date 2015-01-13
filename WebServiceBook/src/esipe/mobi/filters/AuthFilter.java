@@ -1,6 +1,7 @@
 package esipe.mobi.filters;
 
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response.Status;
 
 import com.sun.jersey.spi.container.ContainerRequest;
@@ -12,18 +13,24 @@ public class AuthFilter implements ContainerRequestFilter {
 
 	@Override
 	public ContainerRequest filter(ContainerRequest containerRequest) {
-		// GET, POST, PUT, DELETE, ...
-		String method = containerRequest.getMethod();
+		
+		/*String method = containerRequest.getMethod();
 		// myresource/get/56bCA for example
 		String path = containerRequest.getPath(true);
+		
+		System.out.println("****** Filter Informations ******");
+		System.out.println(containerRequest.getPath());
+		System.out.println(containerRequest.getHeaderValue("authorization"));	
+		System.out.println(containerRequest.getHeaderValue("Host"));
+		System.out.println(containerRequest.getPath());
+		System.out.println(containerRequest.getAbsolutePath());
+		System.out.println(containerRequest.getBaseUri());
 
 		// We do allow wadl to be retrieve
-		if (method.equals("GET")
-				&& (path.equals("application.wadl") || path
-						.equals("application.wadl/xsd0.xsd"))) {
+		if (method.equals("GET")) {
 			return containerRequest;
 		}
-		System.out.println(path);
+	
 
 		// Get the authentification passed in HTTP headers parameters
 		String auth = containerRequest.getHeaderValue("authorization");
@@ -51,7 +58,7 @@ public class AuthFilter implements ContainerRequestFilter {
 		else {
 			throw new WebApplicationException(Status.UNAUTHORIZED);
 		}
-
+	*/
 		return containerRequest;
 	}
 }
