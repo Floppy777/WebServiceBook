@@ -1,7 +1,6 @@
 package esipe.mobi.filters;
 
 import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response.Status;
 
 import com.sun.jersey.spi.container.ContainerRequest;
