@@ -20,7 +20,6 @@ public class BookDao {
 		Book book = null;
 		try {
 			book = (Book)session.get(Book.class,isbn);
-			session.close();
 			if(book == null){
 				throw new WebApplicationException(Status.NOT_FOUND);
 			}
@@ -39,7 +38,6 @@ public class BookDao {
 		List<Book> list = null;
 		try {
 			list = (List<Book>)session.createCriteria(Book.class).add(Restrictions.like("author",author)).list();
-			session.close();
 			if(list.isEmpty()){
 				throw new WebApplicationException(Status.NOT_FOUND);
 			}
@@ -61,7 +59,6 @@ public class BookDao {
 			session.beginTransaction();
 			list = (List<Book>)session.createCriteria(Book.class).list();
 			session.getTransaction().commit();
-			session.close();
 			if(list.isEmpty()){
 				throw new WebApplicationException(Status.NOT_FOUND);
 			}
