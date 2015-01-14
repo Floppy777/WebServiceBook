@@ -14,9 +14,7 @@ public class AuthFilter implements ContainerRequestFilter {
 	@Override
 	public ContainerRequest filter(ContainerRequest containerRequest) {
 		
-		/*String method = containerRequest.getMethod();
-		// myresource/get/56bCA for example
-		String path = containerRequest.getPath(true);
+		String method = containerRequest.getMethod();
 		
 		System.out.println("****** Filter Informations ******");
 		System.out.println(containerRequest.getPath());
@@ -58,7 +56,7 @@ public class AuthFilter implements ContainerRequestFilter {
 		else {
 			throw new WebApplicationException(Status.UNAUTHORIZED);
 		}
-	*/
+	
 		return containerRequest;
 	}
 }

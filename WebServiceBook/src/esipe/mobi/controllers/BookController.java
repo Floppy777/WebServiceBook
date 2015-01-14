@@ -16,34 +16,30 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import com.sun.jersey.spi.resource.Singleton;
+
 import esipe.mobi.beans.Book;
 import esipe.mobi.daos.BookDao;
-import esipe.mobi.exceptions.RestException;
-import esipe.mobi.exceptions.RestNotFoundException;
-import esipe.mobi.exceptions.RestNotModifiedException;
 
 @Path("/book")
+@Singleton
 public class BookController {
-	
+		
 	public BookController(){
 	}
 	
 	@GET
 	@Path("test")
+	@Produces(MediaType.TEXT_PLAIN)
 	public String test(@Context HttpServletRequest info){
-		System.out.println(info);
 		return "Hello World";
 	}
 	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getBooks() {
+	public Response getBooks(){
 		List<Book> listBook = null;
-		try {
-			listBook = BookDao.getAllBooks();
-		} catch (RestException e) {
-			return Response.status(Status.NOT_FOUND).build();
-		}
+		listBook = BookDao.getAllBooks();
 		System.out.println("GetAllBook from Mysql Database : "+ listBook.size());		
 		return Response.status(Status.OK).entity(listBook).build();
 	}
@@ -52,12 +48,7 @@ public class BookController {
 	@Path("isbn/{isbn}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getBookByID(@PathParam("isbn") int isbn) {
-		Book book;
-		try {
-			book = BookDao.getBookByIsbn(isbn);
-		} catch(RestException e){
-			return Response.status(Status.NOT_FOUND).build();
-		}		
+		Book book = BookDao.getBookByIsbn(isbn);
 		System.out.println("Get book from Mysql Database with isbn = " + isbn);		
 		return Response.status(Status.OK).entity(book).build();
 	}
@@ -67,11 +58,7 @@ public class BookController {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getBookByAuthor(@PathParam("author") String author) {
 		List<Book> books;
-		try {
-			books = BookDao.getBookByAuthor(author);
-		}catch(RestException e){
-			return Response.status(Status.NOT_FOUND).build();
-		}		
+		books = BookDao.getBookByAuthor(author);
 		System.out.println("Get books from Mysql Database with author = "+author);
 		return Response.status(Status.OK).entity(books).build();
 	}
@@ -79,11 +66,7 @@ public class BookController {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response postBookByElements(Book b) {
-		try {
-			BookDao.save(b);
-		} catch(RestException e){
-			return Response.status(Status.NO_CONTENT).build();
-		}
+		BookDao.save(b);
 		System.out.println("Book save in Mysql Database");
 		return Response.status(Status.CREATED).build();
 	}
@@ -92,13 +75,7 @@ public class BookController {
 	@Path("isbn/{isbn}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response updateBookByIsbn(Book b, @PathParam("isbn") int isbn){
-		try {
-			BookDao.update(b, isbn);
-		} catch (RestNotFoundException e ){
-			return Response.status(Status.NOT_FOUND).build();
-		} catch(RestNotModifiedException e){
-			return Response.status(Status.NOT_MODIFIED).build();
-		}
+		BookDao.update(b, isbn);
 		System.out.println("Book with isbn = " + isbn + " update in Mysql Database");
 		return Response.status(Status.OK).build();
 	}
@@ -106,12 +83,7 @@ public class BookController {
 	@DELETE
 	@Path("isbn/{isbn}")
 	public Response deleteBokoById(@PathParam("isbn") int isbn){
-		try {
-			BookDao.delete(isbn);
-		}
-		catch(RestException e){
-			return Response.status(Status.NOT_FOUND).build();
-		}
+		BookDao.delete(isbn);
 		System.out.println("Book with isbn = " + isbn + " was delete in Mysql Database");
 		return Response.status(Status.OK).build();
 
